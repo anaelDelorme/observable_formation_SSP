@@ -1,2 +1,2 @@
-# observable_formation_SSP
+# Observable formation SSP
 Formation interne à Observable
