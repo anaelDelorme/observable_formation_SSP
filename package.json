@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@observablehq/inspector": "^5.0.0"
+  }
+}
