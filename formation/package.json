@@ -9,6 +9,7 @@
     "observable": "observable"
   },
   "dependencies": {
+    "@meteo-concept/leaflet-inflatable-markers-group": "^1.6.0",
     "@observablehq/framework": "^1.7.1",
     "d3-dsv": "^3.0.1",
     "d3-time-format": "^4.1.0"

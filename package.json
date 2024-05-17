@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@meteo-concept/leaflet-inflatable-markers-group": "^1.6.0",
     "@observablehq/inspector": "^5.0.0"
   }
 }
