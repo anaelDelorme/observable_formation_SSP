@@ -1,5 +1,6 @@
 ---
-title: Météo - Tests de prise en main
+title: Tests météo
+
 toc: false
 theme: [glacier, slate]
 ---
@@ -26,6 +27,7 @@ theme: [glacier, slate]
       height: 100%;
       width: 100%;
       }
+
 
   
   </style>
