@@ -300,7 +300,7 @@ donneesDuJour.forEach(station => {
         }),
         zIndexOffset: 1000     // S'assurer que le label est au-dessus des autres couches
       }).addTo(map);
-    marker.bindPopup(`Station de ${station.nom_poste.charAt(0).toUpperCase() + station.nom_poste.slice(1).toLowerCase()} </br> Température min: ${station.temp_min_ !== undefined ? station.temp_min + '°C' : '?'}</br> Température max: ${station.temp_max !== undefined ? station.temp_max + '°C' : '?'} </br> Précipitations: ${station.precipitation !== undefined ? station.precipitation + 'mm' : '?'}`);
+    marker.bindPopup(`Station de ${station.nom_poste.charAt(0).toUpperCase() + station.nom_poste.slice(1).toLowerCase()} </br> Température min: ${station.temp_min !== undefined ? station.temp_min + '°C' : '?'}</br> Température max: ${station.temp_max !== undefined ? station.temp_max + '°C' : '?'} </br> Précipitations: ${station.precipitation !== undefined ? station.precipitation + 'mm' : '?'}`);
     }
   }  
     );
