@@ -76,21 +76,18 @@ toc: false
 
 ```js
 // import des données de la Haute-Garonne en 2023 et 2024
-const meteo_31_2023_2024 = FileAttachment("data/Q_31_latest-2023-2024_RR-T-Vent.csv").csv();
-const meteo_34_2023_2024 = FileAttachment("data/Q_34_latest-2023-2024_RR-T-Vent.csv").csv();
-
+const meteo_init =  FileAttachment("data/meteo.json").json();
 ``` 
-
 
 ```js
 
 // Fonction pour transformer le champ date
   function convertToDate(aaaammjj) {
-  
-  if (/^\d{8}$/.test(aaaammjj)) {
-    const year = aaaammjj.substring(0, 4);
-    const month = aaaammjj.substring(4, 6);
-    const day = aaaammjj.substring(6, 8);
+  const data_char = aaaammjj.toString();
+  if (/^\d{8}$/.test(data_char)) {
+    const year = data_char.substring(0, 4);
+    const month = data_char.substring(4, 6);
+    const day = data_char.substring(6, 8);
 
     // Créer un nouvel objet Date
     return new Date(`${year}-${month}-${day}`);
@@ -99,61 +96,59 @@ const meteo_34_2023_2024 = FileAttachment("data/Q_34_latest-2023-2024_RR-T-Vent.
   }
 }
 
-function extractProperties(obj) {
-  const properties = obj["NUM_POSTE;NOM_USUEL;LAT;LON;ALTI;AAAAMMJJ;RR;QRR;TN;QTN;HTN;QHTN;TX;QTX;HTX;QHTX;TM;QTM;TNTXM;QTNTXM;TAMPLI;QTAMPLI;TNSOL;QTNSOL;TN50;QTN50;DG;QDG;FFM;QFFM;FF2M;QFF2M;FXY;QFXY;DXY;QDXY;HXY;QHXY;FXI;QFXI;DXI;QDXI;HXI;QHXI;FXI2;QFXI2;DXI2;QDXI2;HXI2;QHXI2;FXI3S;QFXI3S;DXI3S;QDXI3S;HXI3S;QHXI3S"].split(";");
-  
-  // Fonction pour vérifier si une valeur est numérique
-  function isNumeric(value) {
-    return !isNaN(value) && isFinite(value);
-  }
-
-  // Convertir les valeurs en nombres si elles sont numériques
-  const precipitation = isNumeric(properties[6]) ? Number(properties[6]) : null;
-  const temp_min = isNumeric(properties[8]) ? Number(properties[8]) : null;
-  const temp_max = isNumeric(properties[12]) ? Number(properties[12]) : null;
-  const ampli_thermique = isNumeric(properties[20]) ? Number(properties[20]) : null;
-  const duree_gel_minute = isNumeric(properties[26]) ? Number(properties[26]) : null;
-
-const dateformatee = convertToDate(properties[5]);
-
+let meteo = meteo_init.map(element => {
   return {
-    id_poste: properties[0], 
-    nom_poste: properties[1], 
-    lat: properties[2], 
-    lon: properties[3], 
-    date: dateformatee,
-    precipitation: precipitation,
-    temp_min: temp_min,
-    temp_max: temp_max,
-    ampli_thermique: ampli_thermique,
-    duree_gel_minute: duree_gel_minute
+    ...element,
+    date: convertToDate(element.date)
   };
-}
-const meteo_31_2023_2024_extrait = meteo_31_2023_2024.map(extractProperties);
+});
+
 ```
 
 ```js
 //un tableau simple avec juste le nom des stations météo
-const nomsStations = Array.from(new Set(meteo_31_2023_2024_extrait.map(d => d.nom_poste)));
-const datesMesures = Array.from(new Set(meteo_31_2023_2024_extrait.map(d => d.date)));
+
+const nomsStationsUniques = Array.from(new Set(meteo.map(d => d.nom_poste)))
+  .reduce((acc, nom_poste) => {
+    // Utiliser nom_poste comme clé pour éliminer les doublons
+    if (!acc[nom_poste]) {
+      acc[nom_poste] = {
+        nom_poste: nom_poste,
+        code_departement: meteo.find(d => d.nom_poste === nom_poste).code_departement,
+        nom_poste_formate: nom_poste.charAt(0).toUpperCase() + nom_poste.slice(1).toLowerCase()
+      };
+    }
+    return acc;
+  }, {});
+
+// Convertir l'objet en tableau
+const nomsStations = Object.values(nomsStationsUniques);
+
+// Trier le tableau par les noms formatés en ordre alphabétique
+const nomsStationsTriesEtFormates = nomsStations.sort((a, b) => 
+  a.nom_poste_formate.localeCompare(b.nom_poste_formate)
+);
 
 ```
 
+
 ## Graphique des températures et précipitations selon la station météo
 ```js
-//On met ça dans un Inputs.select et un view pour l'afficher
-const nomsStations_choix = view(Inputs.select(nomsStations, {label: "Station météo :"}));
-
+const nomsStations_choix = view(Inputs.select(nomsStationsTriesEtFormates, {
+  label: "Station météo :",
+  value: d => d.nom_poste, // La valeur renvoyée lorsqu'un élément est sélectionné
+  format: d => d.nom_poste_formate + " ("+d.code_departement+")" // Comment les éléments sont affichés dans la liste déroulante
+}));
 ```
 ```js
 // Options pour le formatage de la date
 const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-const nom_poste_recherche = nomsStations_choix;
+const nom_poste_recherche = nomsStations_choix.nom_poste;
 const date_recherche = new Date(date_choix);
 // Conversion de l'objet Date en chaîne de caractères au format souhaité
 const dateString = date_recherche.toLocaleDateString('fr-FR', options).split('/').join('-');
 
-const objetTrouve = meteo_31_2023_2024_extrait.find(
+const objetTrouve = meteo.find(
   obj => obj.nom_poste === nom_poste_recherche && obj.date.getTime() === date_recherche.getTime()
 );
 ``` 
@@ -161,13 +156,13 @@ const objetTrouve = meteo_31_2023_2024_extrait.find(
 
 ```js
 // Filtrer les données pour le poste choisi
-const donneesFiltrees = meteo_31_2023_2024_extrait.filter(d => d.nom_poste === nom_poste_recherche);
+const donneesFiltrees = meteo.filter(d => d.nom_poste === nomsStations_choix.nom_poste);
 
 // Créer un graphique combiné pour temp_min et temp_max
 function graphiqueTemp(data, {width}) {
   return Plot.plot({
     width,
-  title: "Températures minimales et maximales pour "+nom_poste_recherche,
+  title: "Températures minimales et maximales pour "+nomsStations_choix.nom_poste_formate+" ("+nomsStations_choix.code_departement+")",
   y: {grid: true, inset: 10, label: "Température (°C)"},
   marks: [
     Plot.lineY(data, {
@@ -191,7 +186,7 @@ function graphiqueTemp(data, {width}) {
 // Créer un graphique combiné pour temp_min et temp_max
 function graphiquePrecipitation(data, {width}) {
   return Plot.plot({
-      width,title: "Précipitations pour "+nom_poste_recherche,
+      width,title: "Précipitations pour "+nomsStations_choix.nom_poste_formate+" ("+nomsStations_choix.code_departement+")",
     y: {grid: true, label: "Précipitations (mm)"},
     x: {
       grid: true,
@@ -211,12 +206,6 @@ function graphiquePrecipitation(data, {width}) {
 }
   ```
 
-```js
-// Créer un graphique combiné pour temp_min et temp_max
-function carteTemperature(data, {width}) {
-
-}
-```
 
 
 <div class="grid grid-cols-2">
@@ -236,16 +225,34 @@ function carteTemperature(data, {width}) {
 </div>
 
 ```js
-const date_choix = view(Inputs.select(datesMesures, {label: "Date : "}));
-const choix_variable = view(Inputs.radio(["Température min", "Température max"], {label: "Variable à afficher : "}));
+// Créer un Set pour suivre les dates uniques
+const datesUniques = new Set();
+// Filtrer meteo pour ne garder que les entrées avec des dates uniques
+const meteoUniques = meteo.filter(element => {
+  // Convertir la date en format ISO, puis reformater pour obtenir le format "21-05-2023"
+  const dateISO = new Date(element.date).toISOString();
+  const dateFormatted = dateISO.substring(8, 10) + '-' + dateISO.substring(5, 7) + '-' + dateISO.substring(0, 4);
+  if (!datesUniques.has(dateFormatted)) {
+    datesUniques.add(dateFormatted);
+    return true;
+  }
+  return false;
+});
 
 ```
-```js
-console.log(date_choix)
-// Filtrer les données pour la date du 21-05-2023
-const donneesDuJour = meteo_31_2023_2024_extrait.filter(d => d.date.getTime() === date_choix.getTime());
-console.log(donneesDuJour)
 
+```js
+const date_choix = view(Inputs.select(datesUniques, {label: "Date : "}));
+const choix_variable = view(Inputs.radio(["Température min", "Température max"], {label: "Variable à afficher : ", value:"Température min"}));
+```
+
+```js
+// Filtrer les données pour la date choisie
+const date_choix_format = new Date(date_choix.split('-').reverse().join('-'));
+const donneesDuJour = meteo.filter(d => d.date.getTime() === date_choix_format.getTime());
+```
+
+```js
  function choseColorTemp(value) {
           if (value < 0) {
                 return "#7EBCF2";
@@ -255,8 +262,10 @@ console.log(donneesDuJour)
                 return "#F2C335";
           } else if (value < 30) {
                 return "#F29422";
-          } else {
+          } else if (value > 30) {
                 return "#F21313";
+          } else {
+                return "#0f2537";
           }
     };
 
@@ -266,7 +275,7 @@ div.style = "height: 400px;";
 
 // Insérer la carte dans le div
 const map = L.map(div)
-  .setView([43.2927, 1.8828], 8);
+  .setView([43.8927, 1.8828], 7);
 
 // Ajouter une couche de tuiles à la carte
  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -281,17 +290,21 @@ donneesDuJour.forEach(station => {
   } else {
     variable_choisi = station.temp_max;
   }
-  const color = choseColorTemp(variable_choisi);
-  const marker = L.marker([station.lat, station.lon], {
-    icon: L.divIcon({
-                       html: '<div style="background:'+color+';">' + variable_choisi.toFixed(1) + '°</div>',
-                       iconSize:[40, 20], 
-                      className: 'myIcon'   // Classe CSS pour le style
-    }),
-    zIndexOffset: 1000     // S'assurer que le label est au-dessus des autres couches
-  }).addTo(map);
-  marker.bindPopup(`Station de ${station.nom_poste.charAt(0).toUpperCase() + station.nom_poste.slice(1).toLowerCase()} </br> Température min: ${station.temp_min.toFixed(1)}°C </br> Température max: ${station.temp_max.toFixed(1)}°C </br> Précipitations: ${station.precipitation.toFixed(1)}mm`);
-});
+  if (variable_choisi !== undefined) {
+      const color = choseColorTemp(variable_choisi);
+      const marker = L.marker([station.lat, station.lon], {
+        icon: L.divIcon({
+                          html: '<div style="background:'+color+';">' + variable_choisi + '°</div>',
+                          iconSize:[40, 20], 
+                          className: 'myIcon'   // Classe CSS pour le style
+        }),
+        zIndexOffset: 1000     // S'assurer que le label est au-dessus des autres couches
+      }).addTo(map);
+    marker.bindPopup(`Station de ${station.nom_poste.charAt(0).toUpperCase() + station.nom_poste.slice(1).toLowerCase()} </br> Température min: ${station.temp_min_ !== undefined ? station.temp_min + '°C' : '?'}</br> Température max: ${station.temp_max !== undefined ? station.temp_max + '°C' : '?'} </br> Précipitations: ${station.precipitation !== undefined ? station.precipitation + 'mm' : '?'}`);
+    }
+  }  
+    );
+  
 ```
 
 
