@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Météo - Occitanie | Formation Observable SSP</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
+<link rel="preload" as="style" href="./_observablehq/theme-air,near-midnight.css">
+<link rel="preload" as="style" href="./_observablehq/stdlib/inputs.css">
+<link rel="preload" as="style" href="./_npm/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
+<link rel="stylesheet" type="text/css" href="./_observablehq/theme-air,near-midnight.css">
+<link rel="stylesheet" type="text/css" href="./_observablehq/stdlib/inputs.css">
+<link rel="stylesheet" type="text/css" href="./_npm/leaflet@1.9.4/dist/leaflet.css">
+<link rel="modulepreload" href="./_observablehq/client.js">
+<link rel="modulepreload" href="./_observablehq/runtime.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.js">
+<link rel="modulepreload" href="./_npm/d3@7.9.0/_esm.js">
+<link rel="modulepreload" href="./_observablehq/stdlib/inputs.js">
+<link rel="modulepreload" href="./_npm/leaflet@1.9.4/_esm.js">
+<link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.14/_esm.js">
+<link rel="modulepreload" href="./_npm/htl@0.3.1/_esm.js">
+<link rel="modulepreload" href="./_npm/isoformat@0.2.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-array@3.2.4/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-axis@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-brush@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-chord@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-color@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-contour@4.0.2/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-delaunay@6.0.4/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-dispatch@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-drag@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-ease@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-fetch@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-force@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-format@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-geo@3.1.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-hierarchy@3.1.2/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-interpolate@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-path@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-polygon@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-quadtree@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-random@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-scale@4.0.2/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-scale-chromatic@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-selection@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-shape@3.2.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-time@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-time-format@4.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-timer@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-transition@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-zoom@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/_esm.js">
+<link rel="modulepreload" href="./_npm/internmap@2.0.3/_esm.js">
+<link rel="modulepreload" href="./_npm/delaunator@5.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/binary-search-bounds@2.0.5/_esm.js">
+<link rel="modulepreload" href="./_npm/robust-predicates@3.0.2/_esm.js">
+<link rel="icon" href="./_file/observable.1af93621.png" type="image/png" sizes="32x32">
+<script type="module">
+
+import {define} from "./_observablehq/client.js";
+import {registerFile} from "./_observablehq/stdlib.js";
+
+registerFile("./data/meteo.json", {"name":"./data/meteo.json","mimeType":"application/json","path":"./_file/data/meteo.15ba938e.json","lastModified":1716294459554});
+
+define({id: "cc68c3d2", inputs: ["FileAttachment"], outputs: ["meteo_init"], body: (FileAttachment) => {
+// import des données de la Haute-Garonne en 2023 et 2024
+const meteo_init =  FileAttachment("./data/meteo.json").json();
+return {meteo_init};
+}});
+
+define({id: "efdfd333", inputs: ["meteo_init"], outputs: ["convertToDate","meteo"], body: (meteo_init) => {
+// Fonction pour transformer le champ date
+  function convertToDate(aaaammjj) {
+  const data_char = aaaammjj.toString();
+  if (/^\d{8}$/.test(data_char)) {
+    const year = data_char.substring(0, 4);
+    const month = data_char.substring(4, 6);
+    const day = data_char.substring(6, 8);
+
+    // Créer un nouvel objet Date
+    return new Date(`${year}-${month}-${day}`);
+  } else {
+    throw new Error('La chaîne doit être au format AAAAMMJJ');
+  }
+}
+
+let meteo = meteo_init.map(element => {
+  return {
+    ...element,
+    date: convertToDate(element.date)
+  };
+});
+
+return {convertToDate,meteo};
+}});
+
+define({id: "f860521a", inputs: ["meteo"], outputs: ["nomsStationsUniques","nomsStations","nomsStationsTriesEtFormates"], body: (meteo) => {
+//un tableau simple avec juste le nom des stations météo
+
+const nomsStationsUniques = Array.from(new Set(meteo.map(d => d.nom_poste)))
+  .reduce((acc, nom_poste) => {
+    // Utiliser nom_poste comme clé pour éliminer les doublons
+    if (!acc[nom_poste]) {
+      acc[nom_poste] = {
+        nom_poste: nom_poste,
+        code_departement: meteo.find(d => d.nom_poste === nom_poste).code_departement,
+        nom_poste_formate: nom_poste.charAt(0).toUpperCase() + nom_poste.slice(1).toLowerCase()
+      };
+    }
+    return acc;
+  }, {});
+
+// Convertir l'objet en tableau
+const nomsStations = Object.values(nomsStationsUniques);
+
+// Trier le tableau par les noms formatés en ordre alphabétique
+const nomsStationsTriesEtFormates = nomsStations.sort((a, b) => 
+  a.nom_poste_formate.localeCompare(b.nom_poste_formate)
+);
+
+return {nomsStationsUniques,nomsStations,nomsStationsTriesEtFormates};
+}});
+
+define({id: "ab47062b", inputs: ["view","Inputs","nomsStationsTriesEtFormates"], outputs: ["nomsStations_choix"], body: (view,Inputs,nomsStationsTriesEtFormates) => {
+const nomsStations_choix = view(Inputs.select(nomsStationsTriesEtFormates, {
+  label: "Station météo :",
+  value: d => d.nom_poste, // La valeur renvoyée lorsqu'un élément est sélectionné
+  format: d => d.nom_poste_formate + " ("+d.code_departement+")" // Comment les éléments sont affichés dans la liste déroulante
+}));
+return {nomsStations_choix};
+}});
+
+define({id: "3fc2008d", inputs: ["nomsStations_choix","date_choix","meteo"], outputs: ["options","nom_poste_recherche","date_recherche","dateString","objetTrouve"], body: (nomsStations_choix,date_choix,meteo) => {
+// Options pour le formatage de la date
+const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+const nom_poste_recherche = nomsStations_choix.nom_poste;
+const date_recherche = new Date(date_choix);
+// Conversion de l'objet Date en chaîne de caractères au format souhaité
+const dateString = date_recherche.toLocaleDateString('fr-FR', options).split('/').join('-');
+
+const objetTrouve = meteo.find(
+  obj => obj.nom_poste === nom_poste_recherche && obj.date.getTime() === date_recherche.getTime()
+);
+return {options,nom_poste_recherche,date_recherche,dateString,objetTrouve};
+}});
+
+define({id: "87c0c4b6", inputs: ["meteo","nomsStations_choix","Plot"], outputs: ["donneesFiltrees","graphiqueTemp"], body: (meteo,nomsStations_choix,Plot) => {
+// Filtrer les données pour le poste choisi
+const donneesFiltrees = meteo.filter(d => d.nom_poste === nomsStations_choix.nom_poste);
+
+// Créer un graphique combiné pour temp_min et temp_max
+function graphiqueTemp(data, {width}) {
+  return Plot.plot({
+    width,
+  title: "Températures minimales et maximales pour "+nomsStations_choix.nom_poste_formate+" ("+nomsStations_choix.code_departement+")",
+  y: {grid: true, inset: 10, label: "Température (°C)"},
+  marks: [
+    Plot.lineY(data, {
+      x: "date",
+      y: "temp_min",
+      stroke: "steelblue",
+      label: "Temp. min"
+    }),
+    Plot.lineY(data, {
+      x: "date",
+      y: "temp_max",
+      stroke: "tomato",
+      label: "Temp. max"
+    })
+  ]
+})};
+
+return {donneesFiltrees,graphiqueTemp};
+}});
+
+define({id: "6d01b7db", inputs: ["Plot","nomsStations_choix","d3","donneesFiltrees"], outputs: ["graphiquePrecipitation"], body: (Plot,nomsStations_choix,d3,donneesFiltrees) => {
+// Créer un graphique combiné pour temp_min et temp_max
+function graphiquePrecipitation(data, {width}) {
+  return Plot.plot({
+      width,title: "Précipitations pour "+nomsStations_choix.nom_poste_formate+" ("+nomsStations_choix.code_departement+")",
+    y: {grid: true, label: "Précipitations (mm)"},
+    x: {
+      grid: true,
+      label: "Date",
+      // Utiliser une fonction pour filtrer les ticks pour afficher un tick tous les 3 mois
+      ticks: d3.utcMonth.every(3)
+    },
+    marks: [
+      Plot.barY(donneesFiltrees, {
+        x: "date",
+        y: "precipitation",
+        fill: "darkslateblue"
+            }),
+      Plot.ruleY([0])
+    ]
+  });
+}
+return {graphiquePrecipitation};
+}});
+
+define({id: "2c4c1506", inline: true, inputs: ["resize","graphiqueTemp","donneesFiltrees","display"], body: async (resize,graphiqueTemp,donneesFiltrees,display) => {
+display(await(
+resize((width) => graphiqueTemp(donneesFiltrees, {width}))
+))
+}});
+
+define({id: "dd34979c", inline: true, inputs: ["resize","graphiquePrecipitation","donneesFiltrees","display"], body: async (resize,graphiquePrecipitation,donneesFiltrees,display) => {
+display(await(
+resize((width) => graphiquePrecipitation(donneesFiltrees, {width}))
+))
+}});
+
+define({id: "3a54ae92", inputs: ["meteo"], outputs: ["datesUniques","meteoUniques"], body: (meteo) => {
+// Créer un Set pour suivre les dates uniques
+const datesUniques = new Set();
+// Filtrer meteo pour ne garder que les entrées avec des dates uniques
+const meteoUniques = meteo.filter(element => {
+  // Convertir la date en format ISO, puis reformater pour obtenir le format "21-05-2023"
+  const dateISO = new Date(element.date).toISOString();
+  const dateFormatted = dateISO.substring(8, 10) + '-' + dateISO.substring(5, 7) + '-' + dateISO.substring(0, 4);
+  if (!datesUniques.has(dateFormatted)) {
+    datesUniques.add(dateFormatted);
+    return true;
+  }
+  return false;
+});
+
+return {datesUniques,meteoUniques};
+}});
+
+define({id: "9eaa3826", inputs: ["view","Inputs","datesUniques"], outputs: ["date_choix","choix_variable"], body: (view,Inputs,datesUniques) => {
+const date_choix = view(Inputs.select(datesUniques, {label: "Date : "}));
+const choix_variable = view(Inputs.radio(["Température min", "Température max"], {label: "Variable à afficher : ", value:"Température min"}));
+return {date_choix,choix_variable};
+}});
+
+define({id: "9d839310", inputs: ["date_choix","meteo"], outputs: ["date_choix_format","donneesDuJour"], body: (date_choix,meteo) => {
+// Filtrer les données pour la date choisie
+const date_choix_format = new Date(date_choix.split('-').reverse().join('-'));
+const donneesDuJour = meteo.filter(d => d.date.getTime() === date_choix_format.getTime());
+return {date_choix_format,donneesDuJour};
+}});
+
+define({id: "abbe077d", inputs: ["display","L","donneesDuJour","choix_variable"], outputs: ["choseColorTemp","div","map"], body: (display,L,donneesDuJour,choix_variable) => {
+ function choseColorTemp(value) {
+          if (value < 0) {
+                return "#7EBCF2";
+          } else if (value < 10) {
+                return "#7E97F2";
+          } else if (value < 20) {
+                return "#F2C335";
+          } else if (value < 30) {
+                return "#F29422";
+          } else if (value > 30) {
+                return "#F21313";
+          } else {
+                return "#0f2537";
+          }
+    };
+
+// Initialiser la carte Leaflet
+const div = display(document.createElement("div"));
+div.style = "height: 400px;";
+
+// Insérer la carte dans le div
+const map = L.map(div)
+  .setView([43.8927, 1.8828], 7);
+
+// Ajouter une couche de tuiles à la carte
+ L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+	subdomains: 'abcd'}).addTo(map);
+
+// Ajouter un marqueur pour chaque station météo
+donneesDuJour.forEach(station => {
+  let variable_choisi;
+  if (choix_variable === "Température min") {
+    variable_choisi = station.temp_min;
+  } else {
+    variable_choisi = station.temp_max;
+  }
+  if (variable_choisi !== undefined) {
+      const color = choseColorTemp(variable_choisi);
+      const marker = L.marker([station.lat, station.lon], {
+        icon: L.divIcon({
+                          html: '<div style="background:'+color+';">' + variable_choisi + '°</div>',
+                          iconSize:[40, 20], 
+                          className: 'myIcon'   // Classe CSS pour le style
+        }),
+        zIndexOffset: 1000     // S'assurer que le label est au-dessus des autres couches
+      }).addTo(map);
+    marker.bindPopup(`Station de ${station.nom_poste.charAt(0).toUpperCase() + station.nom_poste.slice(1).toLowerCase()} </br> Température min: ${station.temp_min !== undefined ? station.temp_min + '°C' : '?'}</br> Température max: ${station.temp_max !== undefined ? station.temp_max + '°C' : '?'} </br> Précipitations: ${station.precipitation !== undefined ? station.precipitation + 'mm' : '?'}`);
+    }
+  }  
+    );
+  
+return {choseColorTemp,div,map};
+}});
+
+</script>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link observablehq-link-active"><a href="./">Formation Observable SSP</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link"><a href="./example-markdown">Exemple markdown</a></li>
+    <li class="observablehq-link"><a href="./meteo-test">Tests météo</a></li>
+  </ol>
+</nav>
+<script>{Object.assign(document.createElement("a"),{href:""}).password&&location.replace(location.href);const e=document.querySelector("#observablehq-sidebar"),t=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?t.checked=r==="true":t.indeterminate=!0;for(const o of document.querySelectorAll("#observablehq-sidebar summary")){const s=o.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${o.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<div id="observablehq-center">
+<main id="observablehq-main" class="observablehq">
+<style>
+    * {
+      box-sizing: border-box;
+    }
+
+    #map {
+        position: absolute;
+        top:0;
+        left: 0;
+        right: 0;
+        bottom:0;
+    }
+
+    .myIcon div {
+      display: flex; /* Utiliser flexbox pour centrer le contenu */
+      justify-content: center; /* Centrer horizontalement */
+      align-items: center; /* Centrer verticalement */
+      border: solid grey 1px;
+      border-radius: 100%;
+      opacity: 80%;
+      height: 100%;
+      width: 100%;
+      }
+
+  p, table, figure, figcaption, h1, h2, h3, h4, h5, h6, .katex-display {
+    max-width: 100%;
+}
+  .hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--sans-serif);
+  margin: 4rem 0 8rem;
+  text-wrap: balance;
+  text-align: center;
+}
+
+.hero h1 {
+  margin: 2rem 0;
+  max-width: none;
+  font-size: 14vw;
+  font-weight: 900;
+  line-height: 1;
+  background: linear-gradient(30deg, var(--theme-foreground-focus), currentColor);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero h2 {
+  margin: 0;
+  max-width: 34em;
+  font-size: 20px;
+  font-style: initial;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--theme-foreground-muted);
+}
+
+@media (min-width: 640px) {
+  .hero h1 {
+    font-size: 90px;
+  }
+}
+  </style>
+<div class="hero">
+  <h1>Météo en Occitanie</h1>
+  <h2>Site Observable créé dans le cadre de la formation interne SSP</h2>
+</div>
+<div id="cell-cc68c3d2" class="observablehq observablehq--block"></div>
+<div id="cell-efdfd333" class="observablehq observablehq--block"></div>
+<div id="cell-f860521a" class="observablehq observablehq--block"></div>
+<h2 id="graphique-des-temp%C3%A9ratures-et-pr%C3%A9cipitations-selon-la-station-m%C3%A9t%C3%A9o" tabindex="-1"><a class="observablehq-header-anchor" href="#graphique-des-temp%C3%A9ratures-et-pr%C3%A9cipitations-selon-la-station-m%C3%A9t%C3%A9o">Graphique des températures et précipitations selon la station météo</a></h2>
+<div id="cell-ab47062b" class="observablehq observablehq--block"></div>
+<div id="cell-3fc2008d" class="observablehq observablehq--block"></div>
+<div id="cell-87c0c4b6" class="observablehq observablehq--block"></div>
+<div id="cell-6d01b7db" class="observablehq observablehq--block"></div>
+<div class="grid grid-cols-2">
+  <div class="card">
+    <span id="cell-2c4c1506"><span class="observablehq-loading"></span></span>
+  </div>
+  <div class="card">    
+    <span id="cell-dd34979c"><span class="observablehq-loading"></span></span>
+  </div>
+</div>
+<div class="grid grid-cols-1">
+<h2 id="carte-des-temp%C3%A9ratures" tabindex="-1"><a class="observablehq-header-anchor" href="#carte-des-temp%C3%A9ratures">Carte des températures</a></h2>
+</div>
+<div id="cell-3a54ae92" class="observablehq observablehq--block"></div>
+<div id="cell-9eaa3826" class="observablehq observablehq--block"></div>
+<div id="cell-9d839310" class="observablehq observablehq--block"></div>
+<div id="cell-abbe077d" class="observablehq observablehq--block"></div>
+</main>
+<footer id="observablehq-footer">
+<nav><a rel="next" href="./example-markdown"><span>Exemple markdown</span></a></nav>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-05-22T08:37:50">May 22, 2024</a>.</div>
+</footer>
+</div>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Tests météo | Formation Observable SSP</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
+<link rel="preload" as="style" href="./_observablehq/theme-glacier,slate.css">
+<link rel="preload" as="style" href="./_observablehq/stdlib/inputs.css">
+<link rel="preload" as="style" href="./_npm/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
+<link rel="stylesheet" type="text/css" href="./_observablehq/theme-glacier,slate.css">
+<link rel="stylesheet" type="text/css" href="./_observablehq/stdlib/inputs.css">
+<link rel="stylesheet" type="text/css" href="./_npm/leaflet@1.9.4/dist/leaflet.css">
+<link rel="modulepreload" href="./_observablehq/client.js">
+<link rel="modulepreload" href="./_observablehq/runtime.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3@7.9.0/_esm.js">
+<link rel="modulepreload" href="./_npm/htl@0.3.1/_esm.js">
+<link rel="modulepreload" href="./_observablehq/stdlib/inputs.js">
+<link rel="modulepreload" href="./_npm/leaflet@1.9.4/_esm.js">
+<link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.14/_esm.js">
+<link rel="modulepreload" href="./_npm/isoformat@0.2.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-array@3.2.4/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-axis@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-brush@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-chord@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-color@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-contour@4.0.2/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-delaunay@6.0.4/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-dispatch@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-drag@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-ease@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-fetch@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-force@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-format@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-geo@3.1.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-hierarchy@3.1.2/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-interpolate@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-path@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-polygon@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-quadtree@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-random@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-scale@4.0.2/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-scale-chromatic@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-selection@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-shape@3.2.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-time@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-time-format@4.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-timer@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-transition@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-zoom@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/_esm.js">
+<link rel="modulepreload" href="./_npm/internmap@2.0.3/_esm.js">
+<link rel="modulepreload" href="./_npm/delaunator@5.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/binary-search-bounds@2.0.5/_esm.js">
+<link rel="modulepreload" href="./_npm/robust-predicates@3.0.2/_esm.js">
+<link rel="icon" href="./_file/observable.1af93621.png" type="image/png" sizes="32x32">
+<script type="module">
+
+import {define} from "./_observablehq/client.js";
+import {registerFile} from "./_observablehq/stdlib.js";
+
+registerFile("./data/Q_31_latest-2023-2024_RR-T-Vent.csv", {"name":"./data/Q_31_latest-2023-2024_RR-T-Vent.csv","mimeType":"text/csv","path":"./_file/data/Q_31_latest-2023-2024_RR-T-Vent.d4a112db.csv","lastModified":1715763785886});
+
+define({id: "c7da0f7c", inputs: ["FileAttachment","display"], outputs: ["meteo_31_2023_2024"], body: (FileAttachment,display) => {
+// import des données de la Haute-Garonne en 2023 et 2024
+const meteo_31_2023_2024 = FileAttachment("./data/Q_31_latest-2023-2024_RR-T-Vent.csv").csv();
+
+// Affichage du tableau --> Promise
+display(meteo_31_2023_2024);
+return {meteo_31_2023_2024};
+}});
+
+define({id: "7d0ba155", inputs: ["display","meteo_31_2023_2024"], body: (display,meteo_31_2023_2024) => {
+// Affichage du tableau --> Promise résolue
+display(meteo_31_2023_2024);
+}});
+
+define({id: "61b8a819", inputs: ["meteo_31_2023_2024","display"], outputs: ["convertToDate","extractProperties","meteo_31_2023_2024_extrait"], body: (meteo_31_2023_2024,display) => {
+// Fonction pour transformer le champ date
+  function convertToDate(aaaammjj) {
+  
+  if (/^\d{8}$/.test(aaaammjj)) {
+    const year = aaaammjj.substring(0, 4);
+    const month = aaaammjj.substring(4, 6);
+    const day = aaaammjj.substring(6, 8);
+
+    // Créer un nouvel objet Date
+    return new Date(`${year}-${month}-${day}`);
+  } else {
+    throw new Error('La chaîne doit être au format AAAAMMJJ');
+  }
+}
+
+function extractProperties(obj) {
+  const properties = obj["NUM_POSTE;NOM_USUEL;LAT;LON;ALTI;AAAAMMJJ;RR;QRR;TN;QTN;HTN;QHTN;TX;QTX;HTX;QHTX;TM;QTM;TNTXM;QTNTXM;TAMPLI;QTAMPLI;TNSOL;QTNSOL;TN50;QTN50;DG;QDG;FFM;QFFM;FF2M;QFF2M;FXY;QFXY;DXY;QDXY;HXY;QHXY;FXI;QFXI;DXI;QDXI;HXI;QHXI;FXI2;QFXI2;DXI2;QDXI2;HXI2;QHXI2;FXI3S;QFXI3S;DXI3S;QDXI3S;HXI3S;QHXI3S"].split(";");
+  
+  // Fonction pour vérifier si une valeur est numérique
+  function isNumeric(value) {
+    return !isNaN(value) && isFinite(value);
+  }
+
+  // Convertir les valeurs en nombres si elles sont numériques
+  const precipitation = isNumeric(properties[6]) ? Number(properties[6]) : null;
+  const temp_min = isNumeric(properties[8]) ? Number(properties[8]) : null;
+  const temp_max = isNumeric(properties[12]) ? Number(properties[12]) : null;
+  const ampli_thermique = isNumeric(properties[20]) ? Number(properties[20]) : null;
+  const duree_gel_minute = isNumeric(properties[26]) ? Number(properties[26]) : null;
+
+const dateformatee = convertToDate(properties[5]);
+
+  return {
+    id_poste: properties[0], 
+    nom_poste: properties[1], 
+    lat: properties[2], 
+    lon: properties[3], 
+    date: dateformatee,
+    precipitation: precipitation,
+    temp_min: temp_min,
+    temp_max: temp_max,
+    ampli_thermique: ampli_thermique,
+    duree_gel_minute: duree_gel_minute
+  };
+}
+const meteo_31_2023_2024_extrait = meteo_31_2023_2024.map(extractProperties);
+display(meteo_31_2023_2024_extrait);
+return {convertToDate,extractProperties,meteo_31_2023_2024_extrait};
+}});
+
+define({id: "a9417033", inputs: ["meteo_31_2023_2024_extrait","display"], outputs: ["options","nom_poste_recherche","date_recherche","dateString","objetTrouve"], body: (meteo_31_2023_2024_extrait,display) => {
+// Options pour le formatage de la date
+const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+const nom_poste_recherche = "ARBAS";
+const date_recherche = new Date("2023-05-21");
+// Conversion de l'objet Date en chaîne de caractères au format souhaité
+const dateString = date_recherche.toLocaleDateString('fr-FR', options).split('/').join('-');
+
+const objetTrouve = meteo_31_2023_2024_extrait.find(
+  obj => obj.nom_poste === nom_poste_recherche && obj.date.getTime() === date_recherche.getTime()
+);
+display(objetTrouve)
+return {options,nom_poste_recherche,date_recherche,dateString,objetTrouve};
+}});
+
+define({id: "8d9ee7a1", inline: true, inputs: ["nom_poste_recherche","display"], body: async (nom_poste_recherche,display) => {
+display(await(
+nom_poste_recherche
+))
+}});
+
+define({id: "3b4b2ad1", inline: true, inputs: ["dateString","display"], body: async (dateString,display) => {
+display(await(
+dateString
+))
+}});
+
+define({id: "9d2dfcbf", inline: true, inputs: ["objetTrouve","display"], body: async (objetTrouve,display) => {
+display(await(
+objetTrouve.temp_min
+))
+}});
+
+define({id: "67b0ad15", inline: true, inputs: ["objetTrouve","display"], body: async (objetTrouve,display) => {
+display(await(
+objetTrouve.temp_max
+))
+}});
+
+define({id: "11b7951e", inputs: ["display","Inputs","meteo_31_2023_2024_extrait"], body: (display,Inputs,meteo_31_2023_2024_extrait) => {
+// Création d'une table d'affichage de mes données
+display(Inputs.table(meteo_31_2023_2024_extrait))
+}});
+
+define({id: "4f88ba25", inputs: ["meteo_31_2023_2024_extrait","display","Inputs","options","html"], outputs: ["maxPrecipitation"], body: (meteo_31_2023_2024_extrait,display,Inputs,options,html) => {
+// Trouver la valeur maximale des précipitations
+const maxPrecipitation = Math.max(...meteo_31_2023_2024_extrait.map(d => d.precipitation));
+display(maxPrecipitation)
+// Création d'une table d'affichage avec mise en forme
+display(Inputs.table(meteo_31_2023_2024_extrait,
+    {
+      columns: [
+        "nom_poste",
+        "date",
+        "temp_min",
+        "temp_max",
+        "precipitation"
+      ],
+      header: {
+        nom_poste: "Poste météo",
+        date: "Date",
+        temp_min: "Température min. (°C)",
+        temp_max: "Température max. (°C)",
+        precipitation: "Précipitation (mm)"
+      },
+      format: {
+          nom_poste: (x) => x.charAt(0).toUpperCase() + x.slice(1).toLowerCase(),
+          date: (x) => x.toLocaleDateString('fr-FR', options).split('/').join('-'),
+          temp_min: (x) => {
+            const temp = x.toFixed(1);
+            if (x > 25) {
+              return html`<span style="color: green;">${temp}</span>`; // Vert si supérieur à 25
+            } else if (x < 0) {
+              return html`<span style="color: red;">${temp}</span>`; // Rouge si négatif
+            } else {
+              return temp; // Aucune couleur si entre 0 et 25
+            }
+          },
+          temp_max: (x) => {
+            const temp = x.toFixed(1);
+            if (x > 25) {
+              return html`<span style="color: green;">${temp}</span>`; // Vert si supérieur à 25
+            } else if (x < 0) {
+              return html`<span style="color: red;">${temp}</span>`; // Rouge si négatif
+            } else {
+              return temp; // Aucune couleur si entre 0 et 25
+            }
+          },
+          precipitation: (x) => {
+            const temp = x.toFixed(1);
+            const barLength = (x / maxPrecipitation) * 100;
+            return html`<div style="
+                  background: var(--theme-blue); 
+                  color: black;
+                  width: ${barLength}%; 
+                  height: 20px;
+                  float: right;
+                  padding-right: 3px;
+                  box-sizing: border-box;
+                  overflow: visible;
+                  display: flex;
+                  justify-content: end;">
+                    ${temp}
+                  </div>`;
+          }
+        }
+    })
+)
+return {maxPrecipitation};
+}});
+
+define({id: "b5c6ec48", inputs: ["meteo_31_2023_2024_extrait","Plot","display"], outputs: ["donneesFiltrees","graphiqueTemp"], body: (meteo_31_2023_2024_extrait,Plot,display) => {
+// Filtrer les données pour le poste "AUZEVILLE-TOLOSANE-INRA"
+const donneesFiltrees = meteo_31_2023_2024_extrait.filter(d => d.nom_poste === "AUZEVILLE-TOLOSANE-INRA");
+
+// Créer un graphique combiné pour temp_min et temp_max
+const graphiqueTemp = Plot.plot({
+  title: "Températures minimales et maximales pour  Auzeville-Tolosane-INRA",
+  y: {grid: true, inset: 10, label: "Température (°C)"},
+  marks: [
+    Plot.lineY(donneesFiltrees, {
+      x: "date",
+      y: "temp_min",
+      stroke: "steelblue",
+      label: "Temp. min"
+    }),
+    Plot.lineY(donneesFiltrees, {
+      x: "date",
+      y: "temp_max",
+      stroke: "tomato",
+      label: "Temp. max"
+    })
+  ]
+});
+
+// Afficher le graphique
+display(graphiqueTemp);
+return {donneesFiltrees,graphiqueTemp};
+}});
+
+define({id: "34bec28c", inputs: ["Plot","d3","donneesFiltrees","display"], outputs: ["barTemp"], body: (Plot,d3,donneesFiltrees,display) => {
+// Créer un graphique pour les précipitations
+const barTemp = Plot.plot({
+  title: "Précipitations pour Auzeville-Tolosane-INRA",
+  y: {grid: true, label: "Précipitations (mm)"},
+  x: {
+    grid: true,
+    label: "Date",
+    // Utiliser une fonction pour filtrer les ticks pour afficher un tick tous les 3 mois
+    ticks: d3.utcMonth.every(3)
+  },
+  marks: [
+    Plot.barY(donneesFiltrees, {
+      x: "date",
+      y: "precipitation",
+      fill: "darkslateblue"
+          }),
+    Plot.ruleY([0])
+  ]
+});
+
+// Afficher le graphique
+display(barTemp);
+return {barTemp};
+}});
+
+define({id: "2015cf01", inputs: ["meteo_31_2023_2024_extrait","display","L"], outputs: ["donneesDuJour","div","map"], body: (meteo_31_2023_2024_extrait,display,L) => {
+// Filtrer les données pour la date du 21-05-2023
+const donneesDuJour = meteo_31_2023_2024_extrait.filter(d => d.date.toISOString().startsWith("2023-05-21"));
+
+// Créer la section de la page (div) qui contiendra la carte
+const div = display(document.createElement("div"));
+div.style = "height: 400px;";
+
+// Créer la carte avec leaflet et centrer sur la Haute-Garonne
+const map = L.map(div)
+  .setView([43.2927, 1.8828], 8);
+
+// Ajouter une couche de tuiles à la carte
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+})
+  .addTo(map);
+
+// Ajouter un marqueur pour chaque station météo
+donneesDuJour.forEach(station => {
+  L.marker([station.lat, station.lon]) // création d'un marker aux coordonées de la station
+    .addTo(map)   // que l'on ajoute à la carte qui s'appelle map
+    .bindPopup(`Station de ${station.nom_poste} </br> Température min: ${station.temp_min}°C </br> Température max: ${station.temp_max}°C </br> Précipitations: ${station.precipitation}mm`); // et ajout d'un popup qui contient les infos pertinentes
+})
+return {donneesDuJour,div,map};
+}});
+
+define({id: "2eb677a4", inputs: ["display","L","donneesDuJour"], outputs: ["choseColor","div","map"], body: (display,L,donneesDuJour) => {
+ function choseColor(value) {
+          if (value < 0) {
+                return "#7EBCF2";
+          } else if (value < 10) {
+                return "#7E97F2";
+          } else if (value < 20) {
+                return "#F2C335";
+          } else if (value < 30) {
+                return "#F29422";
+          } else {
+                return "#F21313";
+          }
+    };
+
+// Initialiser la carte Leaflet
+const div = display(document.createElement("div"));
+div.style = "height: 400px;";
+
+// Insérer la carte dans le div
+const map = L.map(div)
+  .setView([43.2927, 1.8828], 8);
+
+// Ajouter une couche de tuiles à la carte
+ L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+	subdomains: 'abcd'}).addTo(map);
+
+// Ajouter un marqueur pour chaque station météo
+donneesDuJour.forEach(station => {
+  const color = choseColor(station.temp_max);
+  const marker = L.marker([station.lat, station.lon], {
+    icon: L.divIcon({
+                       html: '<div style="background:'+color+';">' + station.temp_max.toFixed(1) + '°</div>',
+                       iconSize:[40, 20], 
+                      className: 'myIcon'   // Classe CSS pour le style
+    }),
+    zIndexOffset: 1000     // S'assurer que le label est au-dessus des autres couches
+  }).addTo(map);
+  marker.bindPopup(`Station de ${station.nom_poste.charAt(0).toUpperCase() + station.nom_poste.slice(1).toLowerCase()} </br> Température min: ${station.temp_min.toFixed(1)}°C </br> Température max: ${station.temp_max.toFixed(1)}°C </br> Précipitations: ${station.precipitation.toFixed(1)}mm`);
+});
+return {choseColor,div,map};
+}});
+
+define({id: "a429f405", inputs: ["meteo_31_2023_2024_extrait","view","Inputs"], outputs: ["nomsStations","nomsStations_choix"], body: (meteo_31_2023_2024_extrait,view,Inputs) => {
+//un tableau simple avec juste le nom des stations météo
+const nomsStations = Array.from(new Set(meteo_31_2023_2024_extrait.map(d => d.nom_poste)));
+
+//On met ça dans un Inputs.select et un view pour l'afficher
+const nomsStations_choix = view(Inputs.select(nomsStations, {label: "Choisir une station météo"}));
+
+return {nomsStations,nomsStations_choix};
+}});
+
+define({id: "af8f4a5f", inputs: ["meteo_31_2023_2024_extrait","nomsStations_choix","display","Inputs"], outputs: ["donneesChoisies"], body: (meteo_31_2023_2024_extrait,nomsStations_choix,display,Inputs) => {
+// Filtrage des données avec le résultat de l'input select
+const donneesChoisies = meteo_31_2023_2024_extrait.filter(d => d.nom_poste === nomsStations_choix);
+
+//affichage du tableau 
+display(Inputs.table(donneesChoisies))
+return {donneesChoisies};
+}});
+
+</script>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link"><a href="./">Formation Observable SSP</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link"><a href="./example-markdown">Exemple markdown</a></li>
+    <li class="observablehq-link observablehq-link-active"><a href="./meteo-test">Tests météo</a></li>
+  </ol>
+</nav>
+<script>{Object.assign(document.createElement("a"),{href:""}).password&&location.replace(location.href);const e=document.querySelector("#observablehq-sidebar"),t=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?t.checked=r==="true":t.indeterminate=!0;for(const o of document.querySelectorAll("#observablehq-sidebar summary")){const s=o.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${o.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<div id="observablehq-center">
+<main id="observablehq-main" class="observablehq">
+<style>
+    * {
+      box-sizing: border-box;
+    }
+
+    #map {
+        position: absolute;
+        top:0;
+        left: 0;
+        right: 0;
+        bottom:0;
+    }
+
+    .myIcon div {
+      display: flex; /* Utiliser flexbox pour centrer le contenu */
+      justify-content: center; /* Centrer horizontalement */
+      align-items: center; /* Centrer verticalement */
+      border: solid grey 1px;
+      border-radius: 100%;
+      opacity: 80%;
+      height: 100%;
+      width: 100%;
+      }
+
+
+  
+  </style>
+<h1 id="m%C3%A9t%C3%A9o-en-occitanie" tabindex="-1"><a class="observablehq-header-anchor" href="#m%C3%A9t%C3%A9o-en-occitanie">Météo en Occitanie</a></h1>
+<div id="cell-c7da0f7c" class="observablehq observablehq--block"></div>
+<div id="cell-7d0ba155" class="observablehq observablehq--block"></div>
+<div id="cell-61b8a819" class="observablehq observablehq--block"></div>
+<div id="cell-a9417033" class="observablehq observablehq--block"></div>
+<p>Les températures minimale et maximale pour la station <strong><span id="cell-8d9ee7a1"><span class="observablehq-loading"></span></span></strong> à la date du <strong><span id="cell-3b4b2ad1"><span class="observablehq-loading"></span></span></strong> sont <strong><span id="cell-9d2dfcbf"><span class="observablehq-loading"></span></span>°C</strong> et <strong><span id="cell-67b0ad15"><span class="observablehq-loading"></span></span>°C</strong>.</p>
+<div id="cell-11b7951e" class="observablehq observablehq--block"><span class="observablehq-loading"></span></div>
+<div id="cell-4f88ba25" class="observablehq observablehq--block"></div>
+<div id="cell-b5c6ec48" class="observablehq observablehq--block"></div>
+<div id="cell-34bec28c" class="observablehq observablehq--block"></div>
+<div id="cell-2015cf01" class="observablehq observablehq--block"></div>
+<div id="cell-2eb677a4" class="observablehq observablehq--block"></div>
+<div id="cell-a429f405" class="observablehq observablehq--block"></div>
+<div id="cell-af8f4a5f" class="observablehq observablehq--block"></div>
+</main>
+<footer id="observablehq-footer">
+<nav><a rel="prev" href="./example-markdown"><span>Exemple markdown</span></a></nav>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-05-22T08:37:50">May 22, 2024</a>.</div>
+</footer>
+</div>

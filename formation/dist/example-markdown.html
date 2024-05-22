@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Exemple markdown | Formation Observable SSP</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
+<link rel="preload" as="style" href="./_observablehq/theme-air,near-midnight.css">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
+<link rel="stylesheet" type="text/css" href="./_observablehq/theme-air,near-midnight.css">
+<link rel="modulepreload" href="./_observablehq/client.js">
+<link rel="modulepreload" href="./_observablehq/runtime.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.js">
+<link rel="icon" href="./_file/observable.1af93621.png" type="image/png" sizes="32x32">
+<script type="module">
+
+import "./_observablehq/client.js";
+
+</script>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link"><a href="./">Formation Observable SSP</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link observablehq-link-active"><a href="./example-markdown">Exemple markdown</a></li>
+    <li class="observablehq-link"><a href="./meteo-test">Tests météo</a></li>
+  </ol>
+</nav>
+<script>{Object.assign(document.createElement("a"),{href:""}).password&&location.replace(location.href);const e=document.querySelector("#observablehq-sidebar"),t=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?t.checked=r==="true":t.indeterminate=!0;for(const o of document.querySelectorAll("#observablehq-sidebar summary")){const s=o.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${o.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<aside id="observablehq-toc" data-selector="h1:not(:first-of-type)[id], h2:first-child[id], :not(h1) + h2[id]">
+<nav>
+</nav>
+</aside>
+<div id="observablehq-center">
+<main id="observablehq-main" class="observablehq">
+<p>Titres</p>
+<h1 id="titre-de-niveau-1" tabindex="-1"><a class="observablehq-header-anchor" href="#titre-de-niveau-1">Titre de niveau 1</a></h1>
+<h2 id="titre-de-niveau-2" tabindex="-1"><a class="observablehq-header-anchor" href="#titre-de-niveau-2">Titre de niveau 2</a></h2>
+<h3 id="titre-de-niveau-3" tabindex="-1"><a class="observablehq-header-anchor" href="#titre-de-niveau-3">Titre de niveau 3</a></h3>
+<p><strong>Truc en gras</strong></p>
+<p><em>Truc en italique</em></p>
+<blockquote>
+<p>Ceci est une citation</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Column 1</th>
+<th>Column 2</th>
+<th>Column 3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cell 1-1</td>
+<td>Cell 2-1</td>
+<td>Cell 3-1</td>
+</tr>
+<tr>
+<td>Cell 1-2</td>
+<td>Cell 2-2</td>
+<td>Cell 3-2</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>red</li>
+<li>green</li>
+<li>blue
+<ul>
+<li>light blue</li>
+<li>dark blue</li>
+</ul>
+</li>
+</ul>
+<ol>
+<li>first</li>
+<li>second</li>
+<li>third
+<ol>
+<li>third first</li>
+<li>third second</li>
+</ol>
+</li>
+</ol>
+<p><a href="https://google.com" target="_blank" rel="noopener noreferrer">https://google.com</a><br>
+<a href="./example-dashboard">relative link</a><br>
+<a href="https://lequipe.fr" target="_blank" rel="noopener noreferrer">external link</a><br>
+Images
+<img src="./_file/img/horse.dfb07cce.jpg" alt="A horse">
+<img src="https://placekitten.com/200/300" alt="A happy kitten"></p>
+<details>
+  <summary>Clic ici </summary>
+    Ce texte n'est pas visible par défaut ! 
+</details>
+<div class="grid grid-cols-4">
+  <div class="card"><h1>A</h1></div>
+  <div class="card"><h1>B</h1></div>
+  <div class="card"><h1>C</h1></div>
+  <div class="card"><h1>D</h1></div>
+</div>
+<div class="red">Ce texte est en rouge.</div>
+<div class="yellow">Ce texte est en jaune.</div>
+<div class="green">Ce texte est en vert.</div>
+<div class="blue">Ce texte est en bleu.</div>
+<div class="muted">Ce texte est en gris clair.</div>
+<div class="note" label="Note">C'est une note.</div>
+<div class="tip" label="Astuce">C'est une astuce.</div>
+<div class="warning" label="⚠️ Danger ⚠️">C'est une attention.</div>
+<div class="caution" label="">C'est une mise en garde.</div>  </main>
+<footer id="observablehq-footer">
+<nav><a rel="prev" href="./"><span>Formation Observable SSP</span></a><a rel="next" href="./meteo-test"><span>Tests météo</span></a></nav>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-05-22T08:37:50">May 22, 2024</a>.</div>
+</footer>
+</div>
