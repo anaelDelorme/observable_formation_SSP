@@ -19,24 +19,14 @@ jobs:
           node-version: 20
           cache: "npm"
 
-      - name: Change directory to 'formation'
-        run: |
-            echo "Current directory before changing to 'formation': $(pwd)"
-            cd formation
-            echo "Current directory after changing to 'formation': $(pwd)"
-
       - name: Install dependencies
         run: |
-            echo "Current directory before changing to 'formation': $(pwd)"
             cd formation
-            echo "Current directory after changing to 'formation': $(pwd)"
             npm ci
 
       - name: Build
         run: |
-            echo "Current directory before changing to 'formation': $(pwd)"
             cd formation
-            echo "Current directory after changing to 'formation': $(pwd)"
             npm run build
 
       - name: Upload artifact
@@ -57,6 +47,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          # Spécifiez le sous-répertoire "formation" pour le déploiement.
-          subdirectory: formation
