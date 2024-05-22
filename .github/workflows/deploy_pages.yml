@@ -19,11 +19,14 @@ jobs:
           node-version: 20
           cache: "npm"
 
+      - name: Change directory to 'formation'
+        run: cd formation
+
       - name: Install dependencies
         run: npm ci
 
       - name: Build
-        run: npm run build
+        run: npm install && npm run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
