@@ -66,4 +66,4 @@ Images
 <div class="note" label="Note">C'est une note.</div>
 <div class="tip" label="Astuce">C'est une astuce.</div>
 <div class="warning" label="⚠️ Danger ⚠️">C'est une attention.</div>
-<div class="caution" label>C'est une mise en garde.</div>
+<div class="caution" label>C'est une mise en garde.</div>  
