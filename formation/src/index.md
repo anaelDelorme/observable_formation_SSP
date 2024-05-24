@@ -169,13 +169,17 @@ function graphiqueTemp(data, {width}) {
       x: "date",
       y: "temp_min",
       stroke: "steelblue",
-      label: "Temp. min"
+      label: "Temp. min",
+      k: 10, 
+      reduce: "mean"
     }),
     Plot.lineY(data, {
       x: "date",
       y: "temp_max",
       stroke: "tomato",
-      label: "Temp. max"
+      label: "Temp. max",
+      k: 10, 
+      reduce: "mean"
     })
   ]
 })};
