@@ -229,31 +229,13 @@ function graphiquePrecipitation(data, {width}) {
 </div>
 
 ```js
-// Créer un Set pour suivre les dates uniques
-const datesUniques = new Set();
-// Filtrer meteo pour ne garder que les entrées avec des dates uniques
-const meteoUniques = meteo.filter(element => {
-  // Convertir la date en format ISO, puis reformater pour obtenir le format "21-05-2023"
-  const dateISO = new Date(element.date).toISOString();
-  const dateFormatted = dateISO.substring(8, 10) + '-' + dateISO.substring(5, 7) + '-' + dateISO.substring(0, 4);
-  if (!datesUniques.has(dateFormatted)) {
-    datesUniques.add(dateFormatted);
-    return true;
-  }
-  return false;
-});
-
-```
-
-```js
-const date_choix = view(Inputs.select(datesUniques, {label: "Date : "}));
+const date_choix = view(Inputs.date({label: "Date", value: "2023-01-01", min: "2023-01-01", max: "2024-05-21"}));
 const choix_variable = view(Inputs.radio(["Température min", "Température max"], {label: "Variable à afficher : ", value:"Température min"}));
 ```
 
 ```js
 // Filtrer les données pour la date choisie
-const date_choix_format = new Date(date_choix.split('-').reverse().join('-'));
-const donneesDuJour = meteo.filter(d => d.date.getTime() === date_choix_format.getTime());
+const donneesDuJour = meteo.filter(d => d.date.getTime() === date_choix.getTime());
 ```
 
 ```js

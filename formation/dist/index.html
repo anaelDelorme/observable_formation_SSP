@@ -145,7 +145,7 @@ const objetTrouve = meteo.find(
 return {options,nom_poste_recherche,date_recherche,dateString,objetTrouve};
 }});
 
-define({id: "87c0c4b6", inputs: ["meteo","nomsStations_choix","Plot"], outputs: ["donneesFiltrees","graphiqueTemp"], body: (meteo,nomsStations_choix,Plot) => {
+define({id: "0ac02f95", inputs: ["meteo","nomsStations_choix","Plot"], outputs: ["donneesFiltrees","graphiqueTemp"], body: (meteo,nomsStations_choix,Plot) => {
 // Filtrer les données pour le poste choisi
 const donneesFiltrees = meteo.filter(d => d.nom_poste === nomsStations_choix.nom_poste);
 
@@ -160,13 +160,17 @@ function graphiqueTemp(data, {width}) {
       x: "date",
       y: "temp_min",
       stroke: "steelblue",
-      label: "Temp. min"
+      label: "Temp. min",
+      k: 10, 
+      reduce: "mean"
     }),
     Plot.lineY(data, {
       x: "date",
       y: "temp_max",
       stroke: "tomato",
-      label: "Temp. max"
+      label: "Temp. max",
+      k: 10, 
+      reduce: "mean"
     })
   ]
 })};
@@ -211,35 +215,16 @@ resize((width) => graphiquePrecipitation(donneesFiltrees, {width}))
 ))
 }});
 
-define({id: "3a54ae92", inputs: ["meteo"], outputs: ["datesUniques","meteoUniques"], body: (meteo) => {
-// Créer un Set pour suivre les dates uniques
-const datesUniques = new Set();
-// Filtrer meteo pour ne garder que les entrées avec des dates uniques
-const meteoUniques = meteo.filter(element => {
-  // Convertir la date en format ISO, puis reformater pour obtenir le format "21-05-2023"
-  const dateISO = new Date(element.date).toISOString();
-  const dateFormatted = dateISO.substring(8, 10) + '-' + dateISO.substring(5, 7) + '-' + dateISO.substring(0, 4);
-  if (!datesUniques.has(dateFormatted)) {
-    datesUniques.add(dateFormatted);
-    return true;
-  }
-  return false;
-});
-
-return {datesUniques,meteoUniques};
-}});
-
-define({id: "9eaa3826", inputs: ["view","Inputs","datesUniques"], outputs: ["date_choix","choix_variable"], body: (view,Inputs,datesUniques) => {
-const date_choix = view(Inputs.select(datesUniques, {label: "Date : "}));
+define({id: "6ed2ab3d", inputs: ["view","Inputs"], outputs: ["date_choix","choix_variable"], body: (view,Inputs) => {
+const date_choix = view(Inputs.date({label: "Date", value: "2023-01-01", min: "2023-01-01", max: "2024-05-21"}));
 const choix_variable = view(Inputs.radio(["Température min", "Température max"], {label: "Variable à afficher : ", value:"Température min"}));
 return {date_choix,choix_variable};
 }});
 
-define({id: "9d839310", inputs: ["date_choix","meteo"], outputs: ["date_choix_format","donneesDuJour"], body: (date_choix,meteo) => {
+define({id: "804e248e", inputs: ["meteo","date_choix"], outputs: ["donneesDuJour"], body: (meteo,date_choix) => {
 // Filtrer les données pour la date choisie
-const date_choix_format = new Date(date_choix.split('-').reverse().join('-'));
-const donneesDuJour = meteo.filter(d => d.date.getTime() === date_choix_format.getTime());
-return {date_choix_format,donneesDuJour};
+const donneesDuJour = meteo.filter(d => d.date.getTime() === date_choix.getTime());
+return {donneesDuJour};
 }});
 
 define({id: "abbe077d", inputs: ["display","L","donneesDuJour","choix_variable"], outputs: ["choseColorTemp","div","map"], body: (display,L,donneesDuJour,choix_variable) => {
@@ -389,7 +374,7 @@ return {choseColorTemp,div,map};
 <h2 id="graphique-des-temp%C3%A9ratures-et-pr%C3%A9cipitations-selon-la-station-m%C3%A9t%C3%A9o" tabindex="-1"><a class="observablehq-header-anchor" href="#graphique-des-temp%C3%A9ratures-et-pr%C3%A9cipitations-selon-la-station-m%C3%A9t%C3%A9o">Graphique des températures et précipitations selon la station météo</a></h2>
 <div id="cell-ab47062b" class="observablehq observablehq--block"></div>
 <div id="cell-3fc2008d" class="observablehq observablehq--block"></div>
-<div id="cell-87c0c4b6" class="observablehq observablehq--block"></div>
+<div id="cell-0ac02f95" class="observablehq observablehq--block"></div>
 <div id="cell-6d01b7db" class="observablehq observablehq--block"></div>
 <div class="grid grid-cols-2">
   <div class="card">
@@ -402,13 +387,12 @@ return {choseColorTemp,div,map};
 <div class="grid grid-cols-1">
 <h2 id="carte-des-temp%C3%A9ratures" tabindex="-1"><a class="observablehq-header-anchor" href="#carte-des-temp%C3%A9ratures">Carte des températures</a></h2>
 </div>
-<div id="cell-3a54ae92" class="observablehq observablehq--block"></div>
-<div id="cell-9eaa3826" class="observablehq observablehq--block"></div>
-<div id="cell-9d839310" class="observablehq observablehq--block"></div>
+<div id="cell-6ed2ab3d" class="observablehq observablehq--block"></div>
+<div id="cell-804e248e" class="observablehq observablehq--block"></div>
 <div id="cell-abbe077d" class="observablehq observablehq--block"></div>
 </main>
 <footer id="observablehq-footer">
 <nav><a rel="next" href="./example-markdown"><span>Exemple markdown</span></a></nav>
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-05-22T08:37:50">May 22, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-05-24T13:44:09">May 24, 2024</a>.</div>
 </footer>
 </div>
