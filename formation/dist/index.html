@@ -14,6 +14,7 @@
 <link rel="modulepreload" href="./_observablehq/client.js">
 <link rel="modulepreload" href="./_observablehq/runtime.js">
 <link rel="modulepreload" href="./_observablehq/stdlib.js">
+<link rel="modulepreload" href="./_node/@sakitam-gis/kriging@0.1.0/index.js">
 <link rel="modulepreload" href="./_npm/d3@7.9.0/_esm.js">
 <link rel="modulepreload" href="./_observablehq/stdlib/inputs.js">
 <link rel="modulepreload" href="./_npm/leaflet@1.9.4/_esm.js">
@@ -227,7 +228,7 @@ const donneesDuJour = meteo.filter(d => d.date.getTime() === date_choix.getTime(
 return {donneesDuJour};
 }});
 
-define({id: "abbe077d", inputs: ["display","L","donneesDuJour","choix_variable"], outputs: ["choseColorTemp","div","map"], body: (display,L,donneesDuJour,choix_variable) => {
+define({id: "08319f32", inputs: ["display","L","donneesDuJour","choix_variable"], outputs: ["choseColorTemp","div","map"], body: (display,L,donneesDuJour,choix_variable) => {
  function choseColorTemp(value) {
           if (value < 0) {
                 return "#7EBCF2";
@@ -237,7 +238,7 @@ define({id: "abbe077d", inputs: ["display","L","donneesDuJour","choix_variable"]
                 return "#F2C335";
           } else if (value < 30) {
                 return "#F29422";
-          } else if (value > 30) {
+          } else if (value >= 30) {
                 return "#F21313";
           } else {
                 return "#0f2537";
@@ -281,6 +282,129 @@ donneesDuJour.forEach(station => {
     );
   
 return {choseColorTemp,div,map};
+}});
+
+define({id: "fe2d479e", inputs: ["donneesDuJour","choix_variable"], outputs: ["kriging","donneesDuJourKrig","n","t","x","y"], body: async (donneesDuJour,choix_variable) => {
+const {default: kriging} = await import("./_node/@sakitam-gis/kriging@0.1.0/index.js");
+
+  
+  let donneesDuJourKrig = donneesDuJour;
+  if (choix_variable === "Température min"){
+    donneesDuJourKrig = donneesDuJourKrig.filter(d => d.temp_min !== undefined)
+  }else{
+    donneesDuJourKrig = donneesDuJourKrig.filter(d => d.temp_max !== undefined)
+  }
+  const n = donneesDuJourKrig.length;
+  const t = new Float32Array(n);
+  const x = new Float32Array(n);
+  const y = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    const row = donneesDuJourKrig[i];
+    x[i] = row.lat;
+    y[i] = row.lon;
+    if (choix_variable === "Température min"){
+      t[i] = row.temp_min;
+    }else{
+      t[i] = row.temp_max;
+
+    }
+    
+  }
+return {kriging,donneesDuJourKrig,n,t,x,y};
+}});
+
+define({id: "f860d057", inputs: ["t","x","y","kriging","d3","display","L","donneesDuJourKrig","donneesDuJour"], outputs: ["data_kriging","filteredT","filteredX","filteredY","variogram","colorScale","div","map2","heatLayer","minLat","maxLat","minLon","maxLon","latStep","lonStep","gridPoints"], body: (t,x,y,kriging,d3,display,L,donneesDuJourKrig,donneesDuJour) => {
+  const data_kriging = { t, x, y };
+
+  const filteredT = data_kriging.t.filter((_, i) => !isNaN(data_kriging.t[i]));
+  const filteredX = data_kriging.x.filter((_, i) => !isNaN(data_kriging.x[i]));
+  const filteredY = data_kriging.y.filter((_, i) => !isNaN(data_kriging.y[i]));
+
+  const variogram = kriging.train(filteredT, filteredX, filteredY, "Gaussian", .01, 10);
+
+const colorScale = d3.scaleSequential(d3.interpolateRdBu).domain([35, -10]);
+
+// Initialiser la carte Leaflet
+const div = display(document.createElement("div"));
+div.style = "height: 400px;";
+
+// Insérer la carte dans le div
+const map2 = L.map(div)
+  .setView([43.8927, 1.8828], 7);
+
+// Ajouter une couche de tuiles à la carte
+ L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+	subdomains: 'abcd'}).addTo(map2);
+
+// Ajouter une couche de couleur par températeur
+const heatLayer = L.layerGroup().addTo(map2);
+
+let minLat = Infinity, maxLat = -Infinity, minLon = Infinity, maxLon = -Infinity;
+
+// limite de la zone à colorer
+  donneesDuJourKrig.forEach(station => {
+    if(station.lat < minLat) minLat = station.lat-0.3;
+    if(station.lat > maxLat) maxLat = station.lat+0.3;
+    if(station.lon < minLon) minLon = station.lon-0.3;
+    if(station.lon > maxLon) maxLon = station.lon+0.3;
+  });
+
+// Création de la grille
+const latStep = 0.07; // pas de la grille en latitude
+const lonStep = 0.07; // pas de la grille en longitude
+
+const gridPoints = [];
+
+  for(let lat = minLat; lat <= maxLat; lat += latStep) {
+    for(let lon = minLon; lon <= maxLon; lon += lonStep) {
+      gridPoints.push([lat, lon]);
+    }
+  }
+
+gridPoints.forEach(coord => {
+  // calcul de la température
+  const temp = kriging.predict(...coord, variogram);
+  // choix de la couleur
+  const color = colorScale(temp);
+  //limite du carreau
+  const bounds = [[coord[0] - latStep / 2, coord[1] - lonStep / 2], [coord[0] + latStep / 2, coord[1] + lonStep / 2]];
+
+  //on regarde si on affiche le carreau : on ne l'affiche pas s'il est trop loin d'une station météo
+  let minDistance = Infinity;
+  let closestStation = null;
+
+  donneesDuJour.forEach(station => {
+    const distance = Math.sqrt((coord[0] - station.lat) ** 2 + (coord[1] - station.lon) ** 2);
+    if (distance < minDistance) {
+      minDistance = distance;
+      closestStation = station;
+    }
+  });
+
+  if (minDistance <= 0.3) {
+    const rectangle = L.rectangle(bounds, {weight: 0, fillColor: color, fillOpacity: 0.9}).addTo(heatLayer);
+    rectangle.bindPopup(`Température prédite: ${temp.toFixed(2)}°C`);
+  }
+});
+
+
+// point blanc pour chaque station météo avec popup
+donneesDuJourKrig.forEach(station => {
+ const marker = L.circleMarker([station.lat, station.lon], {
+    color: 'white',
+    fillColor: '#ffffff',
+    fillOpacity: 1,
+    radius: 1 
+  }).addTo(map2);
+    marker.bindPopup(`Station de ${station.nom_poste.charAt(0).toUpperCase() + station.nom_poste.slice(1).toLowerCase()} </br> 
+Température min: ${station.temp_min !== undefined ? station.temp_min + '°C' : '?'}</br> 
+Température max: ${station.temp_max !== undefined ? station.temp_max + '°C' : '?'} </br> 
+Précipitations: ${station.precipitation !== undefined ? station.precipitation + 'mm' : '?'}`);
+    
+  });
+  
+return {data_kriging,filteredT,filteredX,filteredY,variogram,colorScale,div,map2,heatLayer,minLat,maxLat,minLon,maxLon,latStep,lonStep,gridPoints};
 }});
 
 </script>
@@ -389,10 +513,16 @@ return {choseColorTemp,div,map};
 </div>
 <div id="cell-6ed2ab3d" class="observablehq observablehq--block"></div>
 <div id="cell-804e248e" class="observablehq observablehq--block"></div>
-<div id="cell-abbe077d" class="observablehq observablehq--block"></div>
+<div id="cell-08319f32" class="observablehq observablehq--block"></div>
+<br>
+<div class="grid grid-cols-1">
+<h3 id="carte-des-temp%C3%A9ratures-avec-kriging" tabindex="-1"><a class="observablehq-header-anchor" href="#carte-des-temp%C3%A9ratures-avec-kriging">Carte des températures avec kriging</a></h3>
+</div>
+<div id="cell-fe2d479e" class="observablehq observablehq--block"></div>
+<div id="cell-f860d057" class="observablehq observablehq--block"></div>
 </main>
 <footer id="observablehq-footer">
 <nav><a rel="next" href="./example-markdown"><span>Exemple markdown</span></a></nav>
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-05-24T13:44:09">May 24, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-05-28T08:16:10">May 28, 2024</a>.</div>
 </footer>
 </div>

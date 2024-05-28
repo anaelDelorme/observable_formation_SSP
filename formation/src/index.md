@@ -248,7 +248,7 @@ const donneesDuJour = meteo.filter(d => d.date.getTime() === date_choix.getTime(
                 return "#F2C335";
           } else if (value < 30) {
                 return "#F29422";
-          } else if (value > 30) {
+          } else if (value >= 30) {
                 return "#F21313";
           } else {
                 return "#0f2537";
@@ -292,5 +292,130 @@ donneesDuJour.forEach(station => {
     );
   
 ```
+<br/>
+<div class="grid grid-cols-1">
+
+  ### Carte des températures avec kriging
+  
+</div>
 
 
+```js
+import kriging from '@sakitam-gis/kriging';
+
+  
+  let donneesDuJourKrig = donneesDuJour;
+  if (choix_variable === "Température min"){
+    donneesDuJourKrig = donneesDuJourKrig.filter(d => d.temp_min !== undefined)
+  }else{
+    donneesDuJourKrig = donneesDuJourKrig.filter(d => d.temp_max !== undefined)
+  }
+  const n = donneesDuJourKrig.length;
+  const t = new Float32Array(n);
+  const x = new Float32Array(n);
+  const y = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    const row = donneesDuJourKrig[i];
+    x[i] = row.lat;
+    y[i] = row.lon;
+    if (choix_variable === "Température min"){
+      t[i] = row.temp_min;
+    }else{
+      t[i] = row.temp_max;
+
+    }
+    
+  }
+```
+```js
+  const data_kriging = { t, x, y };
+
+  const filteredT = data_kriging.t.filter((_, i) => !isNaN(data_kriging.t[i]));
+  const filteredX = data_kriging.x.filter((_, i) => !isNaN(data_kriging.x[i]));
+  const filteredY = data_kriging.y.filter((_, i) => !isNaN(data_kriging.y[i]));
+
+  const variogram = kriging.train(filteredT, filteredX, filteredY, "Gaussian", .01, 10);
+
+const colorScale = d3.scaleSequential(d3.interpolateRdBu).domain([35, -10]);
+
+// Initialiser la carte Leaflet
+const div = display(document.createElement("div"));
+div.style = "height: 400px;";
+
+// Insérer la carte dans le div
+const map2 = L.map(div)
+  .setView([43.8927, 1.8828], 7);
+
+// Ajouter une couche de tuiles à la carte
+ L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+	subdomains: 'abcd'}).addTo(map2);
+
+// Ajouter une couche de couleur par températeur
+const heatLayer = L.layerGroup().addTo(map2);
+
+let minLat = Infinity, maxLat = -Infinity, minLon = Infinity, maxLon = -Infinity;
+
+// limite de la zone à colorer
+  donneesDuJourKrig.forEach(station => {
+    if(station.lat < minLat) minLat = station.lat-0.3;
+    if(station.lat > maxLat) maxLat = station.lat+0.3;
+    if(station.lon < minLon) minLon = station.lon-0.3;
+    if(station.lon > maxLon) maxLon = station.lon+0.3;
+  });
+
+// Création de la grille
+const latStep = 0.07; // pas de la grille en latitude
+const lonStep = 0.07; // pas de la grille en longitude
+
+const gridPoints = [];
+
+  for(let lat = minLat; lat <= maxLat; lat += latStep) {
+    for(let lon = minLon; lon <= maxLon; lon += lonStep) {
+      gridPoints.push([lat, lon]);
+    }
+  }
+
+gridPoints.forEach(coord => {
+  // calcul de la température
+  const temp = kriging.predict(...coord, variogram);
+  // choix de la couleur
+  const color = colorScale(temp);
+  //limite du carreau
+  const bounds = [[coord[0] - latStep / 2, coord[1] - lonStep / 2], [coord[0] + latStep / 2, coord[1] + lonStep / 2]];
+
+  //on regarde si on affiche le carreau : on ne l'affiche pas s'il est trop loin d'une station météo
+  let minDistance = Infinity;
+  let closestStation = null;
+
+  donneesDuJour.forEach(station => {
+    const distance = Math.sqrt((coord[0] - station.lat) ** 2 + (coord[1] - station.lon) ** 2);
+    if (distance < minDistance) {
+      minDistance = distance;
+      closestStation = station;
+    }
+  });
+
+  if (minDistance <= 0.3) {
+    const rectangle = L.rectangle(bounds, {weight: 0, fillColor: color, fillOpacity: 0.9}).addTo(heatLayer);
+    rectangle.bindPopup(`Température prédite: ${temp.toFixed(2)}°C`);
+  }
+});
+
+
+// point blanc pour chaque station météo avec popup
+donneesDuJourKrig.forEach(station => {
+ const marker = L.circleMarker([station.lat, station.lon], {
+    color: 'white',
+    fillColor: '#ffffff',
+    fillOpacity: 1,
+    radius: 1 
+  }).addTo(map2);
+    marker.bindPopup(`Station de ${station.nom_poste.charAt(0).toUpperCase() + station.nom_poste.slice(1).toLowerCase()} </br> 
+Température min: ${station.temp_min !== undefined ? station.temp_min + '°C' : '?'}</br> 
+Température max: ${station.temp_max !== undefined ? station.temp_max + '°C' : '?'} </br> 
+Précipitations: ${station.precipitation !== undefined ? station.precipitation + 'mm' : '?'}`);
+    
+  });
+  
+```
